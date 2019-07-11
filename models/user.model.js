@@ -13,7 +13,31 @@ let userSchema = new mongoose.Schema({
     password: {
       type: String,
       required: true
-    }
+    },
+    nocontrol:{
+      type:String,
+      required:true
+    },
+    carrera:{
+      type:String,
+      required:true
+    },
+    prestamos:[{
+        _id:{type: mongoose.Schema.Types.ObjectId, ref: 'Libro'},
+        nombre:{
+            type:String
+        },
+        fechainicio:{
+          type: Date
+        },
+        fechafin:{
+          type:Date
+        },
+        adeudo:{
+          type:Number,
+          default:0
+        }
+    }],
   });
   
   const userModel = mongoose.model('User', userSchema, 'users');
