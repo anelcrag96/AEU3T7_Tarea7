@@ -7,4 +7,4 @@
 
 
 # AEU3T7 - Tarea No.7
-![alt tag](https://drive.google.com/file/d/1-JFZfugPphTxzJt59Okfcg3M5k25g2y7/view?usp=sharing)
+![alt tag](https://drive.google.com/open?id=1-LMIUV_E8ZT-CZTPV1dN4JDa_h2wNT_r)
