@@ -2,8 +2,16 @@ const mongoose=require('mongoose');
 
 let userSchema = new mongoose.Schema({
     name: {
-      required: true,
-      type: String
+      type: String,
+      required: true
+    },
+    controlNumber:{
+      type: String,
+      required: true
+    },
+    career:{
+      type: String,
+      required: true
     },
     email: {
       type: String,
@@ -13,7 +21,14 @@ let userSchema = new mongoose.Schema({
     password: {
       type: String,
       required: true
-    }
+    },
+    loan:[{
+      idBook: String, //book:{type: mongoose.Schema.Types.ObjectId, ref: 'Book'}
+      nameBook: String,
+      startDate: Date,
+      expirationDate: Date,
+      debitDays: Number
+    }]
   });
   
   const userModel = mongoose.model('User', userSchema, 'users');

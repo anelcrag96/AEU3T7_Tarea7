@@ -7,4 +7,4 @@
 
 
 # AEU3T7 - Tarea No.7
-![alt tag](https://drive.google.com/file/d/1-JFZfugPphTxzJt59Okfcg3M5k25g2y7/view?usp=sharing)
+![alt tag](https://github.com/anelcrag96/AEU3T7_Tarea7/blob/master/bin/imagen.png)
