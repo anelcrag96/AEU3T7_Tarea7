@@ -9,14 +9,14 @@ const createBook = (req, res) => {
         .then((data) => {
             res.status(200);
             res.json({
-                msg: "Book creado correctamente",
+                msg: "Libro registrado con éxito",
                 data: data
             });
         })
         .catch((error) => {
             res.status(400);
             res.json({ 
-                msg: "Error", 
+                msg: "Error al intentar registrar libro", 
                 err: error 
             });
         })
@@ -31,12 +31,18 @@ const findAllBook = (req, res) => {
             }
             else {
                 res.status(status.OK);
-                res.json({ msg: "Éxito", data: data });
+                res.json({ 
+                    msg: "Éxito \nLibros disponibles", 
+                    data: data 
+                });
             }
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la busqueda", 
+                err: error 
+            });
         });
 }
 
@@ -48,11 +54,17 @@ const findByIdBook = (req, res) => {
     _user.findById(params)
         .then((data) => {
             res.status(status.OK);
-            res.json({ msg: "Éxito", data: data });
+            res.json({ 
+                msg: "Éxito \nLibro disponible", 
+                data: data 
+            });
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la busqueda", 
+                err: error 
+            });
         })
 }
 
@@ -64,11 +76,17 @@ const updateBook = (req, res) => {
     _book.findByIdAndUpdate(params, req.body)
         .then((data) => {
             res.status(status.OK);
-            res.json({ msg: "Exito", data: data });
+            res.json({ 
+                msg: "Libro modificado con éxito",
+                data: data 
+            });
 
         }).catch((error) => {
             res.status(status.NOT_FOUND);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la modificación", 
+                err: error 
+            });
         });
 }
 
@@ -80,11 +98,17 @@ const deleteBook = (req, res) => {
     _book.findByIdAndRemove(params)
         .then((data) => {
             res.status(status.OK);
-            res.json({ msg: "Éxito", data: data });
+            res.json({ 
+                msg: "Libro eliminado con éxito",
+                data: data 
+            });
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la eliminación", 
+                err: error 
+            });
         })
 }
 

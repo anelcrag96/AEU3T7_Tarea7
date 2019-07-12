@@ -4,7 +4,6 @@ const express = require('express');
 const morgan = require('morgan');
 const wagner = require('wagner-core');
 const path = require('path');
-
 const _config = require('./_config');
 const expressJWT = require('express-jwt');
 
@@ -24,14 +23,16 @@ app.use(function (req, res, next) {
 
 const urlBase = "/api/v1/";
 
+//Rutas libres, para que no pida JWT
 const jwtOptions = {
-    path: [/^\/api\/v1\/users\/login\/.*/,//Rutas libres, para que no pida JWT
+    path: [/^\/api\/v1\/users\/login\/.*/,
         /^\/api\/v1\/users\//,
         /^\/api\/v1\/books\//,
         /^\/api\/v1\/loans\//]
 };
 
-app.use(expressJWT({ secret: _config.SECRETJWT }).unless(jwtOptions));//restricciones
+//Restricciones
+app.use(expressJWT({ secret: _config.SECRETJWT }).unless(jwtOptions));
 
 //Controlar error por restricción
 app.use(function (error, req, res, next) {
@@ -47,7 +48,8 @@ app.use(function (error, req, res, next) {
     }//else
 });
 
-const user = require('./routers/user.router')(wagner);//CONTROLAR RUTAS ESPECIFICAS
+//CONTROLAR RUTAS ESPECIFICAS
+const user = require('./routers/user.router')(wagner);
 const book = require('./routers/book.router')(wagner);
 const loan = require('./routers/loan.router')(wagner);
 

@@ -13,7 +13,7 @@ const createUser = (req, res) => {
         .then((data) => {
             res.status(200);
             res.json({
-                msg: "Usuario creado correctamente",
+                msg: "Usuario registrado con éxito",
                 data: data
             });
         })
@@ -21,7 +21,7 @@ const createUser = (req, res) => {
             console.log(user.email);
             res.status(400);
             res.json({ 
-                msg: "Error", 
+                msg: "Error al intentar registrar usuario", 
                 err: error 
             });
         })
@@ -36,12 +36,18 @@ const findAllUser = (req, res) => {
             }
             else {
                 res.status(status.OK);
-                res.json({ msg: "Éxito", data: data });
+                res.json({ 
+                    msg: "Éxito \nUsuarios disponibles", 
+                    data: data 
+                });
             }
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la busqueda", 
+                err: error 
+            });
         });
 }
 
@@ -53,11 +59,17 @@ const findByIdUser = (req, res) => {
     _user.findById(params)
         .then((data) => {
             res.status(status.OK);
-            res.json({ msg: "Éxito", data: data });
+            res.json({ 
+                msg: "Éxito \nUsuario disponible", 
+                data: data 
+            });
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la busqueda", 
+                err: error 
+            });
         })
 }
 
@@ -70,11 +82,17 @@ const updateUser = (req, res) => {
         .then((data) => {
 
             res.status(status.OK);
-            res.json({ msg: "Exito", data: data });
+            res.json({ 
+                msg: "Usuario modificado con éxito",
+                data: data 
+            });
 
         }).catch((error) => {
             res.status(status.NOT_FOUND);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la modificación", 
+                err: error 
+            });
         });
 }
 
@@ -86,11 +104,17 @@ const deleteUser = (req, res) => {
     _user.findByIdAndRemove(params)
         .then((data) => {
             res.status(status.OK);
-            res.json({ msg: "Éxito", data: data });
+            res.json({ 
+                msg: "Usuario eliminado con éxito",
+                data: data 
+            });
         })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
-            res.json({ msg: "Error", err: error });
+            res.json({ 
+                msg: "Error al realizar la eliminación", 
+                err: error 
+            });
         })
 }
 
