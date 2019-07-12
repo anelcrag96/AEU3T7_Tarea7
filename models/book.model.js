@@ -18,7 +18,7 @@ let bookSchema = new mongoose.Schema({
         required: true
     },
     year:{
-        type: Date.year,
+        type: String,
         required: true
     },
     quantity:{
