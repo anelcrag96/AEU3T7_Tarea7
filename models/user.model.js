@@ -22,13 +22,22 @@ let userSchema = new mongoose.Schema({
       type: String,
       required: true
     },
+    nocontrol:{
+      type:String,
+      required:true
+    },
+    carrera:{
+      type:String,
+      required:true
+    },
     loan:[{
-      idBook: String, //book:{type: mongoose.Schema.Types.ObjectId, ref: 'Book'}
+      _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Book'},
       nameBook: String,
       startDate: Date,
       expirationDate: Date,
       debitDays: Number
     }]
+
   });
   
   const userModel = mongoose.model('User', userSchema, 'users');

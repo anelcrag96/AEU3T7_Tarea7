@@ -25,7 +25,9 @@ app.use(function (req, res, next) {
 const urlBase = "/api/v1/";
 
 const jwtOptions = {
-path: [/^\/api\/v1\/users\/login\/.*/]//Rutas libres, para que no pida JWT
+    path: [/^\/api\/v1\/users\/login\/.*/,//Rutas libres, para que no pida JWT
+        /^\/api\/v1\/users\//,
+        /^\/api\/v1\/books\//]
 };
 
 app.use(expressJWT({ secret: _config.SECRETJWT }).unless(jwtOptions));//restricciones
@@ -45,7 +47,9 @@ app.use(function (error, req, res, next) {
 });
 
 const user = require('./routers/user.router')(wagner);//CONTROLAR RUTAS ESPECIFICAS
+const book = require('./routers/book.router')(wagner);
 
 app.use(urlBase + 'users', user);
+app.use(urlBase + 'book', book);
 
 module.exports = app;
