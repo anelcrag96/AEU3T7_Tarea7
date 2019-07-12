@@ -29,15 +29,15 @@ let userSchema = new mongoose.Schema({
     carrera:{
       type:String,
       required:true
-    },
+    }
+    /*,
     loan:[{
       _id: {type: mongoose.Schema.Types.ObjectId, ref: 'Book'},
       nameBook: String,
       startDate: Date,
       expirationDate: Date,
       debitDays: Number
-    }]
-
+    }]*/
   });
   
   const userModel = mongoose.model('User', userSchema, 'users');
