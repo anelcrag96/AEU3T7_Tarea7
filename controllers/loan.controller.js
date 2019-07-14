@@ -112,6 +112,57 @@ const deleteLoan = (req, res) => {
         })
 }
 
+const findExpiredLoans = async (req,res) => {
+    var finalData = [];
+    var fechaBusqueda = {
+        expirationDate: {
+            $lt: new Date()
+        }
+    }
+
+    await _loan.find(fechaBusqueda).populate("idUser").populate("idBook")
+          .then(async (data) => {
+            var actualDate = new Date();
+
+            for(var i=0; i<data.length; i++){
+            var loan = data[0];
+            //calcular los dias de adeudo
+            const diffTime = Math.abs(actualDate.getTime() - loan["expirationDate"].getTime());
+            const debitDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            //actualizar los dias de adeudo en el modelo
+            await updateDebitDays(loan["_id"],debitDays);
+            //cuando termina de actualizar agregar los datos a un nuevo arreglo
+            finalData.push({
+                "idBook":loan["idBook"],
+                "idUser":loan["idUser"],
+                "startDate":loan["startDate"],
+                "expirationDate":loan["expirationDate"],
+                "debitDays":loan["debitDays"],
+                "amount": "$"+(debitDays * 10) 
+            })
+            }
+              
+           res.status(200);
+           res.json({
+               data:finalData
+           })
+        })
+        .catch((error) => {
+            
+        });
+}
+
+//actualizar los dias de retraso
+const updateDebitDays = async (id,debitDays) =>{
+    var param = {
+        "debitDays":debitDays
+    };
+
+   await _loan.findByIdAndUpdate(id,param,{new:true})
+   .then((data) =>{
+   })
+}
+
 module.exports = (Loan) => {
     _loan = Loan;
     return ({
@@ -119,6 +170,7 @@ module.exports = (Loan) => {
         findAllLoan,
         findByIdLoan,
         updateLoan,
-        deleteLoan
+        deleteLoan,
+        findExpiredLoans
     });
 }
