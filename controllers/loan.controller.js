@@ -16,7 +16,7 @@ const createLoan = (req, res) => {
         .catch((error) => {
             res.status(400);
             res.json({ 
-                msg: "Error al intentar registrar prestamo", 
+                msg: "Error al realizar el registro", 
                 err: error 
             });
         })
@@ -27,12 +27,12 @@ const findAllLoan = (req, res) => {
         .then((data) => {
             if (data.length == 0) {
                 res.status(status.NO_CONTENT);
-                res.json({ msg: "No se encontraron prestamos" });
+                res.json({ msg: "Sin préstamos registrados" });
             }
             else {
                 res.status(status.OK);
                 res.json({ 
-                    msg: "Éxito \nPrestamos consultados", 
+                    msg: "Préstamos consultados con éxito", 
                     data: data 
                 });
             }
@@ -55,7 +55,7 @@ const findByIdLoan = (req, res) => {
         .then((data) => {
             res.status(status.OK);
             res.json({ 
-                msg: "Éxito \nPrestamo consultado", 
+                msg: "Préstamo consultado con éxito", 
                 data: data 
             });
         })
@@ -77,8 +77,8 @@ const updateLoan = (req, res) => {
         .then((data) => {
             res.status(status.OK);
             res.json({ 
-                msg: "Prestamo modificado con éxito",
-                data: data 
+                msg: "Préstamo modificado con éxito",
+                data: data
             });
 
         }).catch((error) => {
@@ -99,7 +99,7 @@ const deleteLoan = (req, res) => {
         .then((data) => {
             res.status(status.OK);
             res.json({ 
-                msg: "Prestamo eliminado con éxito",
+                msg: "Préstamo eliminado con éxito",
                 data: data 
             });
         })

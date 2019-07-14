@@ -16,7 +16,7 @@ const createBook = (req, res) => {
         .catch((error) => {
             res.status(400);
             res.json({ 
-                msg: "Error al intentar registrar libro", 
+                msg: "Error al realizar el registro", 
                 err: error 
             });
         })
@@ -27,12 +27,12 @@ const findAllBook = (req, res) => {
         .then((data) => {
             if (data.length == 0) {
                 res.status(status.NO_CONTENT);
-                res.json({ msg: "No se encontraron libros" });
+                res.json({ msg: "Sin libros registrados" });
             }
             else {
                 res.status(status.OK);
                 res.json({ 
-                    msg: "Éxito \nLibros disponibles", 
+                    msg: "Libros consultados con éxito", 
                     data: data 
                 });
             }
@@ -55,7 +55,7 @@ const findByIdBook = (req, res) => {
         .then((data) => {
             res.status(status.OK);
             res.json({ 
-                msg: "Éxito \nLibro disponible", 
+                msg: "Libro consultado con éxito", 
                 data: data 
             });
         })
