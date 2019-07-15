@@ -18,7 +18,6 @@ const createUser = (req, res) => {
             });
         })
         .catch((error) => {
-            console.log(user.email);
             res.status(400);
             res.json({
                 msg: "Error al realizar el registro",
