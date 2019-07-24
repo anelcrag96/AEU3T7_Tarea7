@@ -21,14 +21,14 @@ app.use(function (req, res, next) {
     next();
 });
 
-const urlBase = "/api/v1/";
+const urlBase = "/api/library/v2/";
 
 //Rutas libres, para que no pida JWT
 const jwtOptions = {
-    path: [/^\/api\/v1\/users\/login\/.*/,
-        /^\/api\/v1\/users\//,
-        /^\/api\/v1\/books\//,
-        /^\/api\/v1\/loans\//]
+    path: [/^\/\/api\/library\/v2\/users\/login\/.*/,
+        /^\/api\/library\/v2\/users\//,
+        /^\/api\/library\/v2\/books\//,
+        /^\/api\/library\/v2\/loans\//]
 };
 
 //Restricciones
