@@ -3,41 +3,6 @@ var moment = require('moment');
 
 let _loan;
 
-const createLoan = (req, res) => {
-    const loan = req.body;
-
-    var hoy = new Date();
-    var dd = hoy.getDate();
-    var mm = hoy.getMonth() + 1; //hoy es 0!
-    var yyyy = hoy.getFullYear();
-
-    if (dd < 10) {
-        dd = '0' + dd
-    }
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-
-    loan.startDate = mm + '/' + dd + '/' + yyyy;
-    loan.expirationDate = moment(loan.startDate, 'MM/DD/YYYY').add(5, 'day')
-
-    _loan.create(loan)
-        .then((data) => {
-            res.status(200);
-            res.json({
-                msg: "Prestamo registrado con éxito",
-                data: data
-            });
-        })
-        .catch((error) => {
-            res.status(400);
-            res.json({
-                msg: "Error al realizar el registro",
-                err: error
-            });
-        })
-}
-
 const findAllLoan = (req, res) => {
     _loan.find()
         .then((data) => {

@@ -1,4 +1,5 @@
 const status = require('http-status');
+var moment = require('moment');
 
 let _book;
 
@@ -111,7 +112,7 @@ const deleteBook = (req, res) => {
             });
         })
 }
-
+/****************** */
 const createLoan = (req, res) => {
     const {id} = req.params;
     const loanD = req.body;
@@ -128,10 +129,10 @@ const createLoan = (req, res) => {
         mm = '0' + mm
     }
 
-    loan.startDate = mm + '/' + dd + '/' + yyyy;
-    loan.expirationDate = moment(loan.startDate, 'MM/DD/YYYY').add(5, 'day')
+    loanD.startDate = mm + '/' + dd + '/' + yyyy;
+    loanD.expirationDate = moment(loanD.startDate, 'MM/DD/YYYY').add(5, 'day')
 
-    _loan.update({_id:id},{$push:{loan:loanD}})
+    _book.update({_id:id},{$push:{loan:loanD}})
         .then((data) => {
             res.status(200);
             res.json({
@@ -147,6 +148,155 @@ const createLoan = (req, res) => {
             });
         })
 }
+
+const findAllLoan = (req, res) => {
+    _book.find({},{available:false,quantity:false,image:false,year:false,editorial:false,edition:false,author:false})
+        .then((data) => {
+            if (data.length == 0) {
+                res.status(status.NO_CONTENT);
+                res.json({ msg: "Sin prestamos registrados" });
+            }
+            else {
+                res.status(status.OK);
+                res.json({ 
+                    msg: "Prestamos consultados con éxito", 
+                    data:data
+                });
+            }
+        })
+        .catch((error) => {
+            res.status(status.BAD_REQUEST);
+            res.json({ 
+                msg: "Error al realizar la busqueda de prestamos", 
+                err: error 
+            });
+        });
+}
+
+const findByIdLoan = (req, res) => {
+    const { id } = req.params.id;
+    const { idU } = req.params.idU;
+    const params = {
+        _id:id,
+        loan:[{
+            idUser:idU
+        }]
+    }
+    _book.find({params})
+        .then((data) => {
+            res.status(status.OK);
+            res.json({
+                msg: "Préstamo consultado con éxito",
+                data: data
+            });
+        })
+        .catch((error) => {
+            res.status(status.BAD_REQUEST);
+            res.json({
+                msg: "Error al realizar la busqueda",
+                err: error
+            });
+        })
+}
+
+/** */
+const findExpiredLoan = async (req, res) => {
+    var finalData = [];
+    var fechaBusqueda = {
+        expirationDate: {
+            $lt: new Date()
+        }
+    }
+
+    await _book.find(fechaBusqueda)
+        .populate("idBook")    
+        .populate("idUser")
+        .then(async (data) => {
+            var actualDate = new Date();
+            for (var i = 0; i < data.length; i++) {
+                var loan = data[0];
+                //calcular los dias de adeudo
+                const diffTime = Math.abs(actualDate.getTime() - loan["expirationDate"].getTime());
+                const debitDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                //actualizar los dias de adeudo en el modelo
+                await updateDebitDays(loan["_id"], debitDays);
+                //cuando termina de actualizar agregar los datos a un nuevo arreglo
+                finalData.push({
+                    "idBook": loan["idBook"],
+                    "idUser": loan["idUser"],
+                    "startDate": loan["startDate"],
+                    "expirationDate": loan["expirationDate"],
+                    "debitDays": loan["debitDays"],
+                    "amount": "$" + (debitDays * 10)
+                })
+            }
+            res.status(200);
+            res.json({
+                msg: "Préstamo consultado con éxito",
+                data: finalData
+            })
+        })
+        .catch((error) => {
+            res.status(status.BAD_REQUEST);
+            res.json({
+                msg: "Error al realizar la busqueda",
+                err: error
+            });
+        });
+}
+
+const updateLoan = (req, res) => {
+    const { id } = req.params;
+    const params = {
+        _id: id
+    }
+    _book.findByIdAndUpdate(params, req.body)
+        .then((data) => {
+            res.status(status.OK);
+            res.json({
+                msg: "Préstamo modificado con éxito",
+                data: data
+            });
+
+        }).catch((error) => {
+            res.status(status.NOT_FOUND);
+            res.json({
+                msg: "Error al realizar la modificación",
+                err: error
+            });
+        });
+}
+
+const deleteLoan = (req, res) => {
+    const { id } = req.params;
+    const params = {
+        _id: id
+    }
+    _book.findByIdAndRemove(params)
+        .then((data) => {
+            res.status(status.OK);
+            res.json({
+                msg: "Préstamo eliminado con éxito",
+                data: data
+            });
+        })
+        .catch((error) => {
+            res.status(status.BAD_REQUEST);
+            res.json({
+                msg: "Error al realizar la eliminación",
+                err: error
+            });
+        })
+}
+
+//actualizar los dias de retraso
+const updateDebitDays = async (id, debitDays) => {
+    var param = {
+        "debitDays": debitDays
+    };
+
+    await _book.findByIdAndUpdate(id, param, { new: true })
+}
 module.exports = (Book) => {
     _book = Book;
     return ({
@@ -154,6 +304,12 @@ module.exports = (Book) => {
         findAllBook,
         findByIdBook,
         updateBook,
-        deleteBook
+        deleteBook,
+        createLoan,
+        findAllLoan,
+        findByIdLoan,
+        findExpiredLoan,
+        updateLoan,
+        deleteLoan
     });
 }
