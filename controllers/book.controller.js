@@ -51,7 +51,7 @@ const findByIdBook = (req, res) => {
     const params = {
         _id: id
     }
-    _user.findById(params)
+    _book.findById(params)
         .then((data) => {
             res.status(status.OK);
             res.json({ 
