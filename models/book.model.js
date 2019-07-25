@@ -28,8 +28,27 @@ let bookSchema = new mongoose.Schema({
     available:{
         type: Boolean,
         required: true
-    }
-  });
+    },
+    loan:[{
+            idUser:{
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'User'
+            },
+            startDate:{
+              type: Date,
+              required: true
+            },
+            expirationDate:{
+                type: Date,
+                required: true
+            },
+            debitDays:{
+                type: Number,
+                required: true
+            }
+          }]
+
+    });
   
   const bookModel = mongoose.model('Book', bookSchema, 'books');
   

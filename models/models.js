@@ -9,12 +9,12 @@ module.exports = (wagner) => {
 
     const User = require('./user.model');
     const Book = require('./book.model');
-    const Loan = require('./loan.model');
+   // const Loan = require('./loan.model');
 
     const models = {
         User,
-        Book,
-        Loan
+        Book
+     //   Loan
     }
 
     _.each(models, (v, k) => {

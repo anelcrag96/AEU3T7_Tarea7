@@ -51,10 +51,10 @@ app.use(function (error, req, res, next) {
 //CONTROLAR RUTAS ESPECIFICAS
 const user = require('./routers/user.router')(wagner);
 const book = require('./routers/book.router')(wagner);
-const loan = require('./routers/loan.router')(wagner);
+//const loan = require('./routers/loan.router')(wagner);
 
 app.use(urlBase + 'users', user);
 app.use(urlBase + 'books', book);
-app.use(urlBase + 'loans', loan);
+//app.use(urlBase + 'loans', loan);
 
 module.exports = app;

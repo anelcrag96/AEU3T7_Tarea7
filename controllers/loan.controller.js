@@ -49,7 +49,7 @@ const findAllLoan = (req, res) => {
                 res.status(status.OK);
                 res.json({
                     msg: "Préstamos consultados con éxito",
-                    data: data
+                    data: [data._id,data.loan]
                 });
             }
         })
