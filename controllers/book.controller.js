@@ -150,7 +150,7 @@ const createLoan = (req, res) => {
 }
 
 const findAllLoan = (req, res) => {
-    _book.find({},{available:false,quantity:false,image:false,year:false,editorial:false,edition:false,author:false})
+    _book.find({available:false,quantity:false,image:false,year:false,editorial:false,edition:false,author:false})
         .then((data) => {
             if (data.length == 0) {
                 res.status(status.NO_CONTENT);
@@ -174,22 +174,40 @@ const findAllLoan = (req, res) => {
 }
 
 const findByIdLoan = (req, res) => {
-    const { id } = req.params.id;
-    const { idU } = req.params.idU;
-    const params = {
+    /*
+    const { id } = req.params.id;*/
+   const { idP } = req.params.idP;
+    
+    /*const params = {
         _id:id,
-        loan:[{
-            idUser:idU
-        }]
-    }
-    _book.find({params})
+        loan:{
+            idUser:idP
+        }
+    }*/
+    _book.findOne({"loan._id":req.params.idP},{available:false,edition:false,editorial:false,author:false,year:false,quantity:false})
         .then((data) => {
-            res.status(status.OK);
-            res.json({
-                msg: "Préstamo consultado con éxito",
-                data: data
-            });
-        })
+
+            if(data.length == 0){
+                res.status(status.OK);
+                res.json({msg:"No existe el prestamos"});
+                
+            }
+                        
+            for(i=0;i<data.loan.length;i++)
+                {
+                    if(data.loan[i]._id==req.params.idP)
+                    {
+                        console.log(req.params.idP);
+                        res.status(status.OK);
+                        res.json({
+                        msg: "Préstamo consultado con éxito",
+                        data: data.loan[i],
+                        title: data.name
+                        })
+                    }
+                
+                 }
+            })
         .catch((error) => {
             res.status(status.BAD_REQUEST);
             res.json({

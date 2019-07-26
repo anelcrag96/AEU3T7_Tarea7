@@ -12,7 +12,7 @@ module.exports = (wagner) => {
     /**LOANS */
     router.put('/loan/insert/:id', (req, res) => bookCtrl.createLoan(req, res));
     router.get('/loans/', (req, res) => bookCtrl.findAllLoan(req, res));
-    router.get('/loan/:id/:idU', (req, res) => bookCtrl.findByIdLoan(req, res));
+    router.get('/loan/:idP', (req, res) => bookCtrl.findByIdLoan(req, res));
     router.get('/loan/find/expired/', (req, res) => bookCtrl.findExpiredLoan(req, res));
     router.put('/loan/update/:id', (req, res) => bookCtrl.updateLoan(req, res));
     router.delete('/loand/delete/:id', (req, res) => bookCtrl.deleteLoan(req, res));
