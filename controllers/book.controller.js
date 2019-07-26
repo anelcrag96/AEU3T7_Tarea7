@@ -174,17 +174,9 @@ const findAllLoan = (req, res) => {
 }
 
 const findByIdLoan = (req, res) => {
-    /*
-    const { id } = req.params.id;*/
-   const { idP } = req.params.idP;
-    
-    /*const params = {
-        _id:id,
-        loan:{
-            idUser:idP
-        }
-    }*/
+   
     _book.findOne({"loan._id":req.params.idP},{available:false,edition:false,editorial:false,author:false,year:false,quantity:false})
+        .populate('loan.idUser')
         .then((data) => {
 
             if(data.length == 0){
@@ -221,18 +213,17 @@ const findByIdLoan = (req, res) => {
 const findExpiredLoan = async (req, res) => {
     var finalData = [];
     var fechaBusqueda = {
-        expirationDate: {
+        loan:{expirationDate: {
             $lt: new Date()
-        }
+        }}
     }
 
-    await _book.find(fechaBusqueda)
-        .populate("idBook")    
-        .populate("idUser")
+    await _book.find(fechaBusqueda)  
+        .populate("loan.idUser")
         .then(async (data) => {
             var actualDate = new Date();
             for (var i = 0; i < data.length; i++) {
-                var loan = data[0];
+                var loan = data.loan[0];
                 //calcular los dias de adeudo
                 const diffTime = Math.abs(actualDate.getTime() - loan["expirationDate"].getTime());
                 const debitDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -240,7 +231,6 @@ const findExpiredLoan = async (req, res) => {
                 await updateDebitDays(loan["_id"], debitDays);
                 //cuando termina de actualizar agregar los datos a un nuevo arreglo
                 finalData.push({
-                    "idBook": loan["idBook"],
                     "idUser": loan["idUser"],
                     "startDate": loan["startDate"],
                     "expirationDate": loan["expirationDate"],
@@ -264,48 +254,58 @@ const findExpiredLoan = async (req, res) => {
 }
 
 const updateLoan = (req, res) => {
-    const { id } = req.params;
-    const params = {
-        _id: id
-    }
-    _book.findByIdAndUpdate(params, req.body)
-        .then((data) => {
-            res.status(status.OK);
-            res.json({
-                msg: "Préstamo modificado con éxito",
-                data: data
-            });
+    const {id} = req.params;
+    const loanD = req.body;
 
-        }).catch((error) => {
-            res.status(status.NOT_FOUND);
-            res.json({
-                msg: "Error al realizar la modificación",
-                err: error
-            });
-        });
-}
-
-const deleteLoan = (req, res) => {
-    const { id } = req.params;
-    const params = {
-        _id: id
-    }
-    _book.findByIdAndRemove(params)
+    _book.update({_id:id},{$push:{loan:loanD}})
         .then((data) => {
-            res.status(status.OK);
+            res.status(200);
             res.json({
-                msg: "Préstamo eliminado con éxito",
+                msg: "Prestamo actualizado con éxito",
                 data: data
             });
         })
         .catch((error) => {
-            res.status(status.BAD_REQUEST);
+            res.status(400);
             res.json({
-                msg: "Error al realizar la eliminación",
+                msg: "Error al actualizar",
                 err: error
             });
         })
 }
+
+const deleteLoan = (req, res) => {
+      _book.update({_id:req.params.id,"$pull":{"loan._id":req.params.idP}})
+        .then((data) => {
+
+            if(data.length == 0){
+                res.status(status.OK);
+                res.json({msg:"No existe el prestamos"});
+            }      
+            for(i=0;i<data.loan.length;i++)
+                {
+                    if(data.loan[i]._id==req.params.idP)
+                    {
+                        data.loan[i]
+                        res.status(status.OK);
+                        res.json({
+                            msg: "Préstamo eliminado con éxito",
+                            data: data
+                        });
+                    }
+                
+                 }
+            })
+            .catch((error) => {
+                res.status(status.BAD_REQUEST);
+                res.json({
+                    msg: "Error al realizar la eliminación",
+                    err: error
+                });
+});
+}
+
+
 
 //actualizar los dias de retraso
 const updateDebitDays = async (id, debitDays) => {
